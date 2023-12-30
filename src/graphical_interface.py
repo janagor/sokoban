@@ -1,0 +1,99 @@
+import curses
+from src.game import Game
+
+
+class GraphicalInterface:
+    def __init__(self, stdscr):
+        self.stdscr = stdscr
+        self.height, self.width = stdscr.getmaxyx()
+        curses.curs_set(0)
+        self.running = True
+        self.init_game()
+
+    def init_game(self):
+        self.print_start_of_the_game()
+        self.game = Game()
+        self.print_screen()
+        self.stdscr.refresh()
+
+    def print_start_of_the_game(self):
+        self.welcome_msg1 = "Welcome in Sokoban game!"
+        self.welcome_msg2 = "Press any key to start."
+        self.stdscr.addstr(0, 0, self.welcome_msg1)
+        self.stdscr.addstr(1, 0, self.welcome_msg2)
+        self.stdscr.getch()
+        self.stdscr.clear()
+        self.stdscr.refresh()
+
+    def print_level_number(self):
+        level_statement = f"LEVEL {self.game.cur_state_num}"
+        self.stdscr.addstr(0, 1, level_statement)
+
+    def print_map(self, level):
+        offset = 2
+        for row_index, row in enumerate(level):
+            for col_index, cell in enumerate(row):
+                self.stdscr.addch(row_index + offset, col_index * 2 + 1, cell)
+
+    def print_help_msg(self, offset):
+        help_msg1 = "PRESS ARROW KEYS OR [hjkl] TO MOVE"
+        help_msg2 = "PRESS q TO EXIT"
+        help_msg3 = "PRESS r TO RESTART LEVEL"
+        self.stdscr.addstr(offset + 2, 1, help_msg1)
+        self.stdscr.addstr(offset + 3, 1, help_msg2)
+        self.stdscr.addstr(offset + 4, 1, help_msg3)
+
+    def print_end_of_the_game(self):
+        self.stdscr.clear()
+        end_msg1 = "Congratulation! You won the game!"
+        end_msg2 = "Press any key to exit the game."
+        self.stdscr.addstr(0, 0, end_msg1)
+        self.stdscr.addstr(1, 0, end_msg2)
+        self.stdscr.getch()
+        self.running = False
+
+    def print_screen(self):
+        self.stdscr.clear()
+        level = self.game.cur_state.map
+        self.print_level_number()
+        self.print_map(level)
+        offset = 1
+        self.print_help_msg(len(level) + offset)
+        self.stdscr.refresh()
+
+    def handle_input(self, key):
+        if key in [
+            curses.KEY_UP,
+            curses.KEY_DOWN,
+            curses.KEY_LEFT,
+            curses.KEY_RIGHT,
+            ord('h'),
+            ord('j'),
+            ord('k'),
+            ord('l')
+        ]:
+            self.handle_movement(key)
+        elif key == ord('q'):
+            self.running = False
+        elif key == ord('r'):
+            self.game.player.reset_level()
+        self.print_screen()
+
+    def handle_movement(self, key):
+        if key in [curses.KEY_UP, ord('k')]:
+            self.game.player.move('up')
+        elif key in [curses.KEY_DOWN, ord('j')]:
+            self.game.player.move('down')
+        elif key in [curses.KEY_LEFT, ord('h')]:
+            self.game.player.move('left')
+        elif key in [curses.KEY_RIGHT, ord('l')]:
+            self.game.player.move('right')
+
+    def run(self):
+        while self.running:
+            key = self.stdscr.getch()
+            self.handle_input(key)
+            if self.game.is_game_finished:
+                self.print_end_of_the_game()
+            self.print_screen()
+            self.stdscr.refresh()
