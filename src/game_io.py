@@ -70,7 +70,7 @@ def get_level(level_number: int) -> list[list[str, ...], ...]:
     if not level_number:
         raise LevelNumberError
     file_name = f'{level_number}.txt'
-    file_path = '../sokoban/levels/'
+    file_path = '../sokoban_game/levels/'
     map = None
     with open(f'{file_path}{file_name}', 'r') as f:
         map = convert_from_file_to_map(f)

@@ -77,3 +77,4 @@ class Database:
     def load_maps(self, maps):
         for map in maps:
             self.__maps.append(map)
+

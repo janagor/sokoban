@@ -28,6 +28,7 @@ class State:
         self._goals = []
         self.character = None
         self.init_sokoban_objects()
+        self.num_of_done_moves = 0
 
     @property
     def map(self):
@@ -129,6 +130,7 @@ class State:
                 self.character.set_is_on_goal_state(False)
 
             self.character.move(dircs[dirc])
+            self.num_of_done_moves += 1
 
     def is_level_solved(self):
         is_solved = True
@@ -156,6 +158,7 @@ class State:
         self._goals.clear()
         self.character = None
         self._map = []
+        self.num_of_done_moves = 0
         for row in self._start_map:
             self._map.append(row.copy())
 

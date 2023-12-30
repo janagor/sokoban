@@ -43,6 +43,11 @@ class GraphicalInterface:
         self.stdscr.addstr(offset + 3, 1, help_msg2)
         self.stdscr.addstr(offset + 4, 1, help_msg3)
 
+    def print_num_of_moves_done(self, offset):
+        num_of_moves = self.game.cur_state.num_of_done_moves
+        msg = f"MOVE COUNT: {num_of_moves}"
+        self.stdscr.addstr(offset + 1, 1, msg)
+
     def print_end_of_the_game(self):
         self.stdscr.clear()
         end_msg1 = "Congratulation! You won the game!"
@@ -57,8 +62,9 @@ class GraphicalInterface:
         level = self.game.cur_state.map
         self.print_level_number()
         self.print_map(level)
-        offset = 1
-        self.print_help_msg(len(level) + offset)
+        offset = len(level) + 1
+        self.print_num_of_moves_done(offset)
+        self.print_help_msg(offset + 1)
         self.stdscr.refresh()
 
     def handle_input(self, key):
