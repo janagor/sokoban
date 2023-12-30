@@ -39,8 +39,8 @@ class Game:
 
     def load_level(self, num):
         offset = -1
-        self.cur_state_num = num
-        if self.cur_state_num in self.levs_unlocked:
+        if num in self.levs_unlocked:
+            self.cur_state_num = num
             level_map = self.database.maps[self.cur_state_num + offset]
             self.cur_state = State(level_map)
 
@@ -65,6 +65,15 @@ class Player:
     def reset_level(self):
         self.__game.reset_level()
 
+    def next_level(self):
+        cur_num = self.__game.cur_state_num
+        self.__game.load_level(cur_num + 1)
+
+    def prev_level(self):
+        cur_num = self.__game.cur_state_num
+        if cur_num != 1:
+            self.__game.load_level(cur_num - 1)
+
 
 class Database:
     def __init__(self):
@@ -77,4 +86,3 @@ class Database:
     def load_maps(self, maps):
         for map in maps:
             self.__maps.append(map)
-

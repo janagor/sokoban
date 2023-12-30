@@ -36,12 +36,18 @@ class GraphicalInterface:
                 self.stdscr.addch(row_index + offset, col_index * 2 + 1, cell)
 
     def print_help_msg(self, offset):
+        offset += 2
         help_msg1 = "PRESS ARROW KEYS OR [hjkl] TO MOVE"
         help_msg2 = "PRESS q TO EXIT"
         help_msg3 = "PRESS r TO RESTART LEVEL"
-        self.stdscr.addstr(offset + 2, 1, help_msg1)
-        self.stdscr.addstr(offset + 3, 1, help_msg2)
-        self.stdscr.addstr(offset + 4, 1, help_msg3)
+        help_msg4 = "PRESS w TO GO TO PREVIOUS LEVEL"
+        help_msg5 = "PRESS w TO GO TO PREVIOUS LEVEL (IF UNLOCKED)"
+
+        self.stdscr.addstr(offset, 1, help_msg1)
+        self.stdscr.addstr(offset + 1, 1, help_msg2)
+        self.stdscr.addstr(offset + 2, 1, help_msg3)
+        self.stdscr.addstr(offset + 3, 1, help_msg4)
+        self.stdscr.addstr(offset + 4, 1, help_msg5)
 
     def print_num_of_moves_done(self, offset):
         num_of_moves = self.game.cur_state.num_of_done_moves
@@ -83,7 +89,12 @@ class GraphicalInterface:
             self.running = False
         elif key == ord('r'):
             self.game.player.reset_level()
+        elif key == ord('w'):
+            self.game.player.prev_level()
+        elif key == ord('e'):
+            self.game.player.next_level()
         self.print_screen()
+
 
     def handle_movement(self, key):
         if key in [curses.KEY_UP, ord('k')]:
