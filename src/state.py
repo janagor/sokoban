@@ -4,8 +4,8 @@ from src.sokoban_objects import Character, Box, Wall, Goal
 sok_obj = {
     'box_on_floor': '$',
     'box_on_goal': '*',
-    'character_on_floor': '@',
-    'character_on_goal': '+',
+    'char_on_floor': '@',
+    'char_on_goal': '+',
     'floor': ' ',
     'wall': '#',
     'goal': '.',
@@ -49,9 +49,9 @@ class State:
                     self._goals.append(Goal((xcoord, ycoord)))
                 elif map_object == sok_obj['box_on_floor']:
                     self._boxes.append(Box((xcoord, ycoord), False))
-                elif map_object == sok_obj['character_on_floor']:
+                elif map_object == sok_obj['char_on_floor']:
                     self.character = Character((xcoord, ycoord), False)
-                elif map_object == sok_obj['character_on_goal']:
+                elif map_object == sok_obj['char_on_goal']:
                     self.character = Character((xcoord, ycoord), True)
                     self._goals.append(Goal((xcoord, ycoord)))
                 elif map_object == sok_obj['goal']:
@@ -123,10 +123,10 @@ class State:
                 if goal.pos == new_pos:
                     goal_on_next_pos = True
             if goal_on_next_pos:
-                self.update_map(new_pos, 'character_on_goal')
+                self.update_map(new_pos, 'char_on_goal')
                 self.character.set_is_on_goal_state(True)
             else:
-                self.update_map(new_pos, 'character_on_floor')
+                self.update_map(new_pos, 'char_on_floor')
                 self.character.set_is_on_goal_state(False)
 
             self.character.move(dircs[dirc])

@@ -5,7 +5,7 @@ from src.game_io import get_level
 
 class Game:
     def __init__(self):
-        self.__num_of_levs = 2
+        self.__num_of_levs = 7
         self.levs = range(1, self.__num_of_levs + 1)
         self.levs_unlocked = {1}
         self.cur_state_num = 1

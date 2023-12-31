@@ -42,9 +42,9 @@ def is_level_map_legal(map: list[list[str, ...], ...]) -> bool:
     num_of_goals = 0
     for line in map:
         for element in line:
-            if element == sok_obj['character_on_floor']:
+            if element == sok_obj['char_on_floor']:
                 num_of_characters += 1
-            elif element == sok_obj['character_on_goal']:
+            elif element == sok_obj['char_on_goal']:
                 num_of_characters += 1
                 num_of_goals += 1
             elif element == sok_obj['goal']:
