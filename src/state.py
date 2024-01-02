@@ -96,14 +96,15 @@ class State:
     def character_move_is_legal(self, dirc: dircs.keys()):
         new_pos = self.add_coords(self.character.pos, dircs[dirc])
         is_legal = True
-        for wall in self._walls:
-            if wall.pos == new_pos:
-                is_legal = False
+        wall = self.find_wall_on_exact_pos(new_pos)
+        if wall:
+            is_legal = False
         if is_legal:
-            for box in self._boxes:
-                if box.pos == new_pos:
-                    behind_box = self.add_coords(new_pos, dircs[dirc])
-                    is_legal = self.box_move_is_legal(behind_box)
+            box = self.find_box_on_exact_pos(new_pos)
+            if box:
+                behind_box = self.add_coords(new_pos, dircs[dirc])
+                is_legal = self.box_move_is_legal(behind_box)
+
         return is_legal
 
     def move_character(self, dirc):
@@ -114,14 +115,11 @@ class State:
             else:
                 self.update_map(self.character.pos, 'floor')
 
-            for box in self._boxes:
-                if box.pos == new_pos:
-                    self.move_box(box, dirc)
+            box = self.find_box_on_exact_pos(new_pos)
+            if box:
+                self.move_box(box, dirc)
 
-            goal_on_next_pos = False
-            for goal in self._goals:
-                if goal.pos == new_pos:
-                    goal_on_next_pos = True
+            goal_on_next_pos = self.find_goal_on_exact_pos(new_pos)
             if goal_on_next_pos:
                 self.update_map(new_pos, 'char_on_goal')
                 self.character.set_is_on_goal_state(True)
@@ -131,13 +129,6 @@ class State:
 
             self.character.move(dircs[dirc])
             self.num_of_done_moves += 1
-
-    def is_level_solved(self):
-        is_solved = True
-        for box in self._boxes:
-            if not box.is_on_goal:
-                is_solved = False
-        return is_solved
 
     def find_object_in_type_list(self, pos, type_list):
         chosen_object = None
@@ -151,6 +142,9 @@ class State:
 
     def find_goal_on_exact_pos(self, pos):
         return self.find_object_in_type_list(pos, self._goals)
+
+    def find_wall_on_exact_pos(self, pos):
+        return self.find_object_in_type_list(pos, self._walls)
 
     def reset(self):
         self._boxes.clear()

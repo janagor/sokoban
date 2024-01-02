@@ -57,7 +57,7 @@ class Player:
     def move(self, move):
         if move in self.moves:
             self.__game.cur_state.move_character(move)
-        if self.__game.cur_state.is_level_solved():
+        if self.__game.cur_state.is_solved():
             self.__game.unlock_level()
             if not self.__game.is_game_finished:
                 self.__game.load_level(self.__game.cur_state_num + 1)
