@@ -1,7 +1,7 @@
 from typing import Optional
 import curses
 from src.game import Game
-from src.state import sok_obj
+from src.state import sok_obj_chars
 
 
 class GraphicalInterface:
@@ -51,7 +51,7 @@ class GraphicalInterface:
         try:
             for row_index, row in enumerate(level):
                 for col_index, cell in enumerate(row):
-                    if cell not in [sok_obj['char_on_floor'], sok_obj['char_on_goal']]:
+                    if cell not in [sok_obj_chars['char_on_floor'], sok_obj_chars['char_on_goal']]:
                         self.stdscr.addch(row_index + offset, col_index * 2 + 1, cell)
                     else:
                         self.stdscr.attron(curses.color_pair(self.pl_col_num))

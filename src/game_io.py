@@ -1,5 +1,10 @@
-import io
-from src.state import sok_obj
+from __future__ import annotations
+import json
+from src.state import sok_obj_chars
+from typing import IO, Union, List
+Table = List[List[str]]
+
+path = './src/config.json'
 
 
 class WrongFileDataError(Exception):
@@ -22,7 +27,7 @@ class MelfomedMapError(Exception):
     pass
 
 
-def convert_from_file_to_map(file_handle: io.TextIOWrapper) -> list[list[str, ...], ...]:
+def convert_from_file_to_map(file_handle: IO) -> Table:
     map = []
     for lines in file_handle:
         pos_lines = lines.rstrip()
@@ -35,26 +40,26 @@ def convert_from_file_to_map(file_handle: io.TextIOWrapper) -> list[list[str, ..
         raise MelfomedMapError
 
 
-def is_level_map_legal(map: list[list[str, ...], ...]) -> bool:
+def is_level_map_legal(map: Table) -> bool:
     map_is_legal = True
     num_of_characters = 0
     num_of_boxes = 0
     num_of_goals = 0
     for line in map:
         for element in line:
-            if element == sok_obj['char_on_floor']:
+            if element == sok_obj_chars['char_on_floor']:
                 num_of_characters += 1
-            elif element == sok_obj['char_on_goal']:
+            elif element == sok_obj_chars['char_on_goal']:
                 num_of_characters += 1
                 num_of_goals += 1
-            elif element == sok_obj['goal']:
+            elif element == sok_obj_chars['goal']:
                 num_of_goals += 1
-            elif element == sok_obj['box_on_floor']:
+            elif element == sok_obj_chars['box_on_floor']:
                 num_of_boxes += 1
-            elif element == sok_obj['box_on_goal']:
+            elif element == sok_obj_chars['box_on_goal']:
                 num_of_goals += 1
                 num_of_boxes += 1
-            if element not in sok_obj.values():
+            if element not in sok_obj_chars.values():
                 map_is_legal = False
                 raise WrongFileDataError
     if num_of_characters != 1:
@@ -66,12 +71,20 @@ def is_level_map_legal(map: list[list[str, ...], ...]) -> bool:
     return map_is_legal
 
 
-def get_level(level_number: int) -> list[list[str, ...], ...]:
+def get_level(level_number: int) -> Table:
     if not level_number:
         raise LevelNumberError
     file_name = f'{level_number}.txt'
-    file_path = '../sokoban_game/levels/'
+    file_path = get_data_from_config("path_to_levels")
     map = None
     with open(f'{file_path}{file_name}', 'r') as f:
         map = convert_from_file_to_map(f)
     return map
+
+
+def get_data_from_config(param: str) -> Union[int, str]:
+    value = None
+    with open(path, 'r') as file_handle:
+        config_data = json.load(file_handle)
+        value = config_data[param]
+    return value

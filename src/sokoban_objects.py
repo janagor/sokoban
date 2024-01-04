@@ -1,50 +1,50 @@
 from __future__ import annotations
+from typing import Tuple
 
 
-class MovingObject:
-    def __init__(self, pos: tuple, is_on_goal: bool):
+class GameObject:
+    def __init__(self, pos: tuple) -> None:
         self._pos = pos
-        self._is_on_goal = is_on_goal
 
     @property
-    def pos(self) -> tuple(int, int):
+    def pos(self) -> Tuple[int]:
         return self._pos
+
+    def set_pos(self, new_pos: Tuple[int]) -> None:
+        self._pos = new_pos
+
+
+class Wall(GameObject):
+    def __init__(self, pos: tuple) -> None:
+        super().__init__(pos)
+
+
+class Goal(GameObject):
+    def __init__(self, pos: tuple) -> None:
+        super().__init__(pos)
+
+
+class Character(GameObject):
+    def __init__(self, pos: tuple, is_on_goal: bool) -> None:
+        super().__init__(pos)
+        self._is_on_goal = is_on_goal
 
     @property
     def is_on_goal(self) -> bool:
         return self._is_on_goal
 
-    def set_is_on_goal_state(self, is_on_goal_state: bool):
+    def set_is_on_goal_state(self, is_on_goal_state: bool) -> None:
         self._is_on_goal = is_on_goal_state
 
-    def move(self, dirc_vec: tuple):
-        self._pos = tuple(x + y for x, y in zip(self.pos, dirc_vec))
 
-
-class Character(MovingObject):
-    def __init__(self, pos: tuple, is_on_goal: bool):
-        super().__init__(pos, is_on_goal)
-
-
-class Box(MovingObject):
-    def __init__(self, pos: tuple, is_on_goal: bool):
-        super().__init__(pos, is_on_goal)
-
-
-class StationaryObject:
-    def __init__(self, pos: tuple):
-        self._pos = pos
+class Box(GameObject):
+    def __init__(self, pos: tuple, is_on_goal: bool) -> None:
+        super().__init__(pos)
+        self._is_on_goal = is_on_goal
 
     @property
-    def pos(self) -> tuple(int, int):
-        return self._pos
+    def is_on_goal(self) -> bool:
+        return self._is_on_goal
 
-
-class Wall(StationaryObject):
-    def __init__(self, pos: tuple):
-        super().__init__(pos)
-
-
-class Goal(StationaryObject):
-    def __init__(self, pos: tuple):
-        super().__init__(pos)
+    def set_is_on_goal_state(self, is_on_goal_state: bool) -> None:
+        self._is_on_goal = is_on_goal_state
