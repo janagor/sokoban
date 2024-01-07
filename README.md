@@ -1,6 +1,10 @@
 # Sokoban
 Basic version of the Sokoban game implemented as a terminal game with an option to add new levels.
 
+# Author
+Jan Górski
+Student ID: 324960
+
 ### Installation
 To install the game, follow these steps:
 
