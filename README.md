@@ -6,8 +6,8 @@ To install the game, follow these steps:
 
 1. Create a virtual environment:
 ```bash
-mkdir your_directory &&
-cd your_directory &&
+mkdir your_directory
+cd your_directory
 python3 -m venv .venv
 ```
 
@@ -17,12 +17,12 @@ source .venv/bin/activate
 ```
 3. Clone the repository
 ```bash
-git clone thisdirecory
+git clone https://github.com/janagor/sokoban.git
 ```
 ### Starting the game
 To start the game, use the following commands:
 ```bash
-cd sokobane_game
+cd sokoban
 python3 sokoban.py
 ```
 

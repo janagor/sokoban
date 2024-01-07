@@ -71,7 +71,7 @@ class Gui:
         help_msg2 = "PRESS q TO EXIT"
         help_msg3 = "PRESS r TO RESTART LEVEL"
         help_msg4 = "PRESS w TO GO TO PREVIOUS LEVEL"
-        help_msg5 = "PRESS w TO GO TO PREVIOUS LEVEL (IF UNLOCKED)"
+        help_msg5 = "PRESS e TO GO TO NEXT LEVEL (IF UNLOCKED)"
         try:
             self.stdscr.addstr(offset, 1, help_msg1)
             self.stdscr.addstr(offset + 1, 1, help_msg2)
