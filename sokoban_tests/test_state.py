@@ -35,7 +35,7 @@ def test_move_box():
     box_pos = (2, 2)
     direction = 'right'
     box = state.find_box_on_exact_pos(box_pos)
-    state.move_box(box, direction)
+    state.move_object(box, direction)
     assert box.pos == (3, 2)
 
 
@@ -44,7 +44,7 @@ def test_move_box_illegal_into_wall():
     start_pos = (2, 2)
     dirc = 'down'
     box = state.find_box_on_exact_pos(start_pos)
-    state.move_box(box, dirc)
+    state.move_object(box, dirc)
     assert box.pos == start_pos
 
 
@@ -53,7 +53,7 @@ def test_move_box_illegal_into_other_box():
     start_pos = (2, 2)
     dirc = 'up'
     box = state.find_box_on_exact_pos(start_pos)
-    state.move_box(box, dirc)
+    state.move_object(box, dirc)
     assert box.pos == start_pos
 
 
@@ -62,7 +62,7 @@ def test_move_box_change_in_map():
     box_pos = (2, 2)
     dirc = 'right'
     box = state.find_box_on_exact_pos(box_pos)
-    state.move_box(box, dirc)
+    state.move_object(box, dirc)
     assert state._map[2][2] == ' '
     assert state._map[2][3] == '*'
 
@@ -72,7 +72,7 @@ def test_illegal_move_no_change_in_map():
     start_pos = (2, 2)
     dirc = 'down'
     box = state.find_box_on_exact_pos(start_pos)
-    state.move_box(box, dirc)
+    state.move_object(box, dirc)
     assert state._map[2][2] == '$'
     assert state._map[3][2] == '#'
 
@@ -101,14 +101,14 @@ def test_character_move_is_illegal_box_cannot_move():
 def test_move_character_onto_floor():
     state = State(lev1)
     dirc = 'up'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state.character._pos == (1, 1)
 
 
 def test_move_character_into_box_that_can_move():
     state = State(lev1)
     dirc = 'right'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state.character._pos == (2, 2)
     assert state._map[2][1] == ' '
     assert state._map[2][2] == '@'
@@ -118,7 +118,7 @@ def test_move_character_into_box_that_can_move():
 def test_move_character_into_wall():
     state = State(lev1)
     dirc = 'left'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state.character._pos == (1, 2)
     assert state._map[2][1] == '@'
     assert state._map[2][0] == '#'
@@ -127,7 +127,7 @@ def test_move_character_into_wall():
 def test_move_character_into_box_that_cannot_move():
     state = State(lev2)
     dirc = 'right'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state.character._pos == (2, 2)
     assert state._map[2][2] == '@'
     assert state._map[2][3] == '$'
@@ -137,7 +137,7 @@ def test_move_character_into_box_that_cannot_move():
 def test_reset_state():
     state = State(lev1)
     dirc = 'right'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state._map is not state._start_map
     state.reset()
     assert state._map == state._start_map
@@ -151,5 +151,5 @@ def test_level_is_not_solved():
 def test_level_is_solved():
     state = State(lev1)
     dirc = 'right'
-    state.move_character(dirc)
+    state.move_object(state.character, dirc)
     assert state.is_solved()

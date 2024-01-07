@@ -3,7 +3,6 @@ import json
 from src.state import sok_obj_chars
 from typing import IO, Union, List
 Table = List[List[str]]
-
 path = './src/config.json'
 
 
@@ -24,6 +23,13 @@ class NumbersOfBoxesAndGoalsNotEqualError(Exception):
 
 
 class MelfomedMapError(Exception):
+    pass
+
+
+class NoLevelError(FileNotFoundError):
+    def __init__(self, lev_num):
+        self. __lev_num = lev_num
+        super().__init__(f'There is no level {lev_num}')
     pass
 
 
@@ -77,8 +83,11 @@ def get_level(level_number: int) -> Table:
     file_name = f'{level_number}.txt'
     file_path = get_data_from_config("path_to_levels")
     map = None
-    with open(f'{file_path}{file_name}', 'r') as f:
-        map = convert_from_file_to_map(f)
+    try:
+        with open(f'{file_path}{file_name}', 'r') as f:
+            map = convert_from_file_to_map(f)
+    except FileNotFoundError:
+        raise NoLevelError(level_number)
     return map
 
 

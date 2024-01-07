@@ -3,6 +3,7 @@ from src.game_io import WrongFileDataError
 from src.game_io import LevelNumberError
 from src.game_io import IllegalNumberOfCharactersError
 from src.game_io import NumbersOfBoxesAndGoalsNotEqualError
+from src.game_io import NoLevelError
 import pytest
 from io import StringIO
 
@@ -43,3 +44,8 @@ def test_numbers_of_goals_and_boxes_not_equal():
     path = StringIO(data)
     with pytest.raises(NumbersOfBoxesAndGoalsNotEqualError):
         convert_from_file_to_map(path)
+
+
+def test_level_number_does_not_exist():
+    with pytest.raises(NoLevelError):
+        get_level(123)

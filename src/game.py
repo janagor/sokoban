@@ -6,35 +6,6 @@ from src.game_io import Table
 from src.helpers import lev_to_load, moves
 
 
-class Game:
-    def __init__(self) -> None:
-        self.__game_factory = GameFactory()
-        self.cur_state = State(self.__game_factory.load_level(1))
-        self.player = Player(self)
-
-    @property
-    def game_factory(self) -> GameFactory:
-        return self.__game_factory
-
-    def reset_level(self) -> None:
-        self.cur_state.reset()
-
-    def load_level(self, load_type: str) -> None:
-        if load_type == lev_to_load[0]:
-            level = self.__game_factory.prev_level()
-            if level:
-                self.cur_state = State(level)
-        elif load_type == lev_to_load[1]:
-            level = self.__game_factory.next_level()
-            if level:
-                self.cur_state = State(level)
-        elif load_type == lev_to_load[2]:
-            self.cur_state = State(self.__game_factory.new_level())
-
-    def cur_state_finished(self) -> None:
-        self.load_level(lev_to_load[2])
-
-
 class Player:
     def __init__(self, game: Game) -> None:
         self.__game = game
@@ -68,22 +39,34 @@ class GameFactory:
         self.__cur_lev_num = starting_level
         self.__levs_unlocked.add(self.cur_lev_num)
         self.__collector = Collector()
-        self.__collector.load_maps(self.__load_maps_to_collector())
+        self.__collector.load_maps(self.load_maps_to_collector())
         self.__is_game_finished = False
 
     @property
-    def collector(self) -> Collector:
-        return self.__collector
+    def levs_number(self) -> int:
+        return self.__levs_number
+
+    @property
+    def levs(self) -> int:
+        return self.__levs
+
+    @property
+    def levs_unlocked(self) -> int:
+        return self.__levs_unlocked
 
     @property
     def cur_lev_num(self) -> int:
         return self.__cur_lev_num
 
     @property
+    def collector(self) -> Collector:
+        return self.__collector
+
+    @property
     def is_game_finished(self) -> bool:
         return self.__is_game_finished
 
-    def __load_maps_to_collector(self) -> List[Table]:
+    def load_maps_to_collector(self) -> List[Table]:
         maps = []
         for num in self.__levs:
             lev = get_level(num)
@@ -117,3 +100,29 @@ class GameFactory:
             self.__cur_lev_num = num
             level_map = self.__collector.maps[num + offset]
             return level_map
+
+
+class Game:
+    def __init__(self) -> None:
+        self.__game_factory = GameFactory()
+        self.cur_state = State(self.__game_factory.load_level(1))
+        self.player = Player(self)
+
+    @property
+    def game_factory(self) -> GameFactory:
+        return self.__game_factory
+
+    def reset_level(self) -> None:
+        self.cur_state.reset()
+
+    def load_level(self, load_type: str) -> None:
+        if load_type == lev_to_load[0]:
+            level = self.__game_factory.prev_level()
+            if level:
+                self.cur_state = State(level)
+        elif load_type == lev_to_load[1]:
+            level = self.__game_factory.next_level()
+            if level:
+                self.cur_state = State(level)
+        elif load_type == lev_to_load[2]:
+            self.cur_state = State(self.__game_factory.new_level())

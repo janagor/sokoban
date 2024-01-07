@@ -1,34 +1,36 @@
-Sokoban
-1. CO REALIZUJE PROJEKT
-Basic version of sokoban game implemented as a terminal game with opion to add new legal levels.
+# Sokoban
+Basic version of the Sokoban game implemented as a terminal game with an option to add new levels.
 
+### Installation
+To install the game, follow these steps:
 
-2. Jak go uruchomić, zainstalować dependencje, etc.
-To install the game you must do following steps:
-
-1. Create virtual environment:
-```
-mkdir your_dorectory &&
+1. Create a virtual environment:
+```bash
+mkdir your_directory &&
 cd your_directory &&
 python3 -m venv .venv
 ```
-2. Activate virtual environment:
-```
+
+Activate the virtual environment:
+```bash
 source .venv/bin/activate
 ```
-3. Clone repository
-```
+3. Clone the repository
+```bash
 git clone thisdirecory
 ```
-To start the game do the following commands:
-```
+### Starting the game
+To start the game, use the following commands:
+```bash
 cd sokobane_game
 python3 sokoban.py
 ```
 
+### Levels
 To create your own level:
-Create a <level_number>.txt file where <level_number> is the number of your level
-Format used for representing Sokoban level involves:
+1. Create a *level_number.txt* file where *level_number* is the number of your level
+2. Use the following format for representing Sokoban level:
+
 |Level element|Character|
 |:------------ |:---------------:|
 |Wall|#|
@@ -39,9 +41,9 @@ Format used for representing Sokoban level involves:
 |Goal|.|
 |Floor|(space)|
 
-For example, level 1 may look like this:
+For example, a level file may may look like this:
 
-```
+```bash
   ###
   #.#
   # ####
@@ -52,30 +54,30 @@ For example, level 1 may look like this:
    ###
 ```
 
-Important
-
-The whole level should be souranded by walls.
-
-First level must have nember equal 1. Folowing levels shold have numbers incremented by one.
-
-Level file must not have any other characters then from above.
-
-Default color of a level and a player is white. However, you can change their colors while starting the game. In order to do so, you need to add additionl parameters:
-1. '--game_color' or '-g', with preferred color to change game's color, for example:
-```
+### Level format
+The level should be surrounded by walls. The first level's number must equal 1. Following levels should have numbers incremented by one. The level file must not have any other characters than those listed above. The default color of a level and a player is white. However, you can change their colors while starting the game. To do so, you need to add additional parameters:
+1. `--game_color` or `-g`, with the preferred color to change game's color, for example:
+```bash
 python3 sokoban.py --game_color 'green'
 ```
-2. '--player' or '-p', with preferred color to change player-s color, for example:
-```
+2. `--player` or `-p`, with preferred color to change player's color, for example:
+```bash
 python3 sokoban.py --player_color 'red'
 ```
 
 Available colors:
-blue cyan, green, magenta, red, white, yellow
+* `blue`
+* `cyan`
+* `green`
+* `magenta`
+* `red`
+* `white`
+* `yellow`
 
-White is a default color for both map and player
 
-3. Diagram architektury projektu z opisem tej architektury.
+`White` is the default color for both map and player.
 
+### UML Diagram visualizing chosen architecture
 ![Diagram UML](./graphics/sokoban_uml_diagram.png)
+
 

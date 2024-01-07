@@ -21,6 +21,10 @@ class State:
     def map(self):
         return self._map
 
+    @property
+    def start_map(self):
+        return self._start_map
+
     def init_map(self, map: Table) -> None:
         self._map = []
         self._start_map = []
