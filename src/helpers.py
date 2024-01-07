@@ -1,5 +1,21 @@
 from typing import Tuple, Union, List
 from src.sokoban_objects import Box, Wall, Goal
+import curses
+
+
+lev_to_load = ('prev', 'next', 'new')
+
+moves = {'up', 'down', 'left', 'right'}
+
+colors = {
+    'blue': curses.COLOR_BLUE,
+    'cyan': curses.COLOR_CYAN,
+    'green': curses.COLOR_GREEN,
+    'magenta': curses.COLOR_MAGENTA,
+    'red': curses.COLOR_RED,
+    'white': curses.COLOR_WHITE,
+    'yellow': curses.COLOR_YELLOW
+}
 
 sok_obj_chars = {
     'box_on_floor': '$',

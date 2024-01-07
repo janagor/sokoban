@@ -1,39 +1,32 @@
 import curses
-from src.graphical_interface import GraphicalInterface
+from src.gui import Gui
 import argparse
 import sys
+from src.helpers import colors
 
 
-def main(stdscr, arguments):
-    colors = {
-        'blue': curses.COLOR_BLUE,
-        'cyan': curses.COLOR_CYAN,
-        'green': curses.COLOR_GREEN,
-        'magenta': curses.COLOR_MAGENTA,
-        'red': curses.COLOR_RED,
-        'white': curses.COLOR_WHITE,
-        'yellow': curses.COLOR_YELLOW
-        }
+def game_session(stdscr, arguments):
     try:
         parser = argparse.ArgumentParser()
 
-        parser.add_argument('--objects_color')
-        parser.add_argument('--players_color')
+        parser.add_argument('--game_color', '-g')
+        parser.add_argument('--player_color', '-p')
         args = parser.parse_args(arguments[1:])
-        obj_col = 'white'
-        if args.objects_color:
-            if args.objects_color in colors:
-                obj_col = args.objects_color
-        pl_col = 'white'
-        if args.players_color:
-            if args.players_color in colors:
-                pl_col = args.players_color
+        default_color = 'white'
+        game_col = default_color
+        if args.game_color:
+            if args.game_color in colors:
+                game_col = args.game_color
+        pl_col = default_color
+        if args.player_color:
+            if args.player_color in colors:
+                pl_col = args.player_color
 
-        session = GraphicalInterface(stdscr, colors[obj_col], colors[pl_col])
-        session.run()
+        game = Gui(stdscr, colors[game_col], colors[pl_col])
+        game.run()
     except curses.error:
         pass
 
 
 if __name__ == "__main__":
-    curses.wrapper(main, sys.argv)
+    curses.wrapper(game_session, sys.argv)
