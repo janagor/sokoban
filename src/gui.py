@@ -2,9 +2,10 @@ from typing import Optional
 import curses
 from src.game import Game
 from src.state import sok_obj_chars
+from src.helpers import lev_to_load
 
 
-class GraphicalInterface:
+class Gui:
     def __init__(self, stdscr: curses.window, obj_col: Optional[int] = curses.COLOR_WHITE, pl_col: Optional[int] = curses.COLOR_WHITE):
         self.stdscr = stdscr
         self.init_colors(obj_col, pl_col)
@@ -21,17 +22,19 @@ class GraphicalInterface:
 
     def init_colors(self, obj_col: int, pl_col: int):
         curses.start_color()
-        self.obj_col_num = 1
-        self.pl_col_num = 2
+        self.default_col_num = 1
+        self.obj_col_num = 2
+        self.pl_col_num = 3
+        curses.init_pair(self.default_col_num, curses.COLOR_WHITE, curses.COLOR_BLACK)
         curses.init_pair(self.obj_col_num, obj_col, curses.COLOR_BLACK)
         curses.init_pair(self.pl_col_num, pl_col, curses.COLOR_BLACK)
-        self.stdscr.attron(curses.color_pair(self.obj_col_num))
+        self.stdscr.attron(curses.color_pair(self.default_col_num))
 
-    def print_start_of_the_game(self):
-        self.welcome_msg1 = "Welcome in Sokoban game!"
-        self.welcome_msg2 = "Press any key to start."
-        self.stdscr.addstr(0, 0, self.welcome_msg1)
-        self.stdscr.addstr(1, 0, self.welcome_msg2)
+    def print_start_of_the_game(self) -> None:
+        welcome_msg1 = "Welcome in Sokoban game!"
+        welcome_msg2 = "Press any key to start."
+        self.stdscr.addstr(0, 0, welcome_msg1)
+        self.stdscr.addstr(1, 0, welcome_msg2)
         try:
             self.stdscr.getch()
             self.stdscr.clear()
@@ -39,15 +42,16 @@ class GraphicalInterface:
         except curses.error:
             pass
 
-    def print_level_number(self):
-        level_statement = f"LEVEL {self.game.cur_state_num}"
+    def print_level_number(self) -> None:
+        level_statement = f"LEVEL {self.game.game_factory.cur_lev_num}"
         try:
             self.stdscr.addstr(0, 1, level_statement)
         except curses.error:
             pass
 
-    def print_map(self, level: int):
+    def print_map(self, level: int) -> None:
         offset = 2
+        self.stdscr.attron(curses.color_pair(self.obj_col_num))
         try:
             for row_index, row in enumerate(level):
                 for col_index, cell in enumerate(row):
@@ -59,8 +63,9 @@ class GraphicalInterface:
                         self.stdscr.attron(curses.color_pair(self.obj_col_num))
         except curses.error:
             pass
+        self.stdscr.attron(curses.color_pair(self.default_col_num))
 
-    def print_help_msg(self, offset: int):
+    def print_help_msg(self, offset: int) -> None:
         offset += 2
         help_msg1 = "PRESS ARROW KEYS OR [hjkl] TO MOVE"
         help_msg2 = "PRESS q TO EXIT"
@@ -76,7 +81,7 @@ class GraphicalInterface:
         except curses.error:
             pass
 
-    def print_num_of_moves_done(self, offset: int):
+    def print_num_of_moves_done(self, offset: int) -> None:
         num_of_moves = self.game.cur_state.num_of_done_moves
         msg = f"MOVE COUNT: {num_of_moves}"
         try:
@@ -84,7 +89,7 @@ class GraphicalInterface:
         except curses.error:
             pass
 
-    def print_end_of_the_game(self):
+    def print_end_of_the_game(self) -> None:
         self.stdscr.clear()
         end_msg1 = "Congratulation! You won the game!"
         end_msg2 = "Press any key to exit the game."
@@ -96,7 +101,7 @@ class GraphicalInterface:
             pass
         self.running = False
 
-    def print_screen(self):
+    def print_screen(self) -> None:
         self.stdscr.clear()
         level = self.game.cur_state.map
         self.print_level_number()
@@ -106,7 +111,7 @@ class GraphicalInterface:
         self.print_help_msg(offset + 1)
         self.stdscr.refresh()
 
-    def handle_input(self, key: int):
+    def handle_input(self, key: int) -> None:
         if key in [
             curses.KEY_UP,
             curses.KEY_DOWN,
@@ -121,14 +126,14 @@ class GraphicalInterface:
         elif key == ord('q'):
             self.running = False
         elif key == ord('r'):
-            self.game.player.reset_level()
+            self.game.reset_level()
         elif key == ord('w'):
-            self.game.player.prev_level()
+            self.game.load_level(lev_to_load[0])
         elif key == ord('e'):
-            self.game.player.next_level()
+            self.game.load_level(lev_to_load[1])
         self.print_screen()
 
-    def handle_movement(self, key: int):
+    def handle_movement(self, key: int) -> None:
         if key in [curses.KEY_UP, ord('k')]:
             self.game.player.move('up')
         elif key in [curses.KEY_DOWN, ord('j')]:
@@ -138,11 +143,11 @@ class GraphicalInterface:
         elif key in [curses.KEY_RIGHT, ord('l')]:
             self.game.player.move('right')
 
-    def run(self):
+    def run(self) -> None:
         while self.running:
             key = self.stdscr.getch()
             self.handle_input(key)
-            if self.game.is_game_finished:
+            if self.game.game_factory.is_game_finished:
                 self.print_end_of_the_game()
             self.print_screen()
             self.stdscr.refresh()

@@ -1,25 +1,9 @@
 from __future__ import annotations
 from src.sokoban_objects import Character, Box, Wall, Goal
 from src.helpers import add_coords, find_object_in_type_list
+from src.helpers import sok_obj_chars, dircs
 from typing import Union, Tuple, List
 Table = List[List[str]]
-
-sok_obj_chars = {
-    'box_on_floor': '$',
-    'box_on_goal': '*',
-    'char_on_floor': '@',
-    'char_on_goal': '+',
-    'floor': ' ',
-    'wall': '#',
-    'goal': '.',
-}
-
-dircs = {
-    'up': (0, -1),
-    'down': (0, 1),
-    'left': (-1, 0),
-    'right': (1, 0)
-}
 
 
 class State:
